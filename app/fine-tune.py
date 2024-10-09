@@ -1,6 +1,8 @@
 import pandas as pd
-from transformers import LlamaForCausalLM, LlamaTokenizer, Trainer, TrainingArguments
+from transformers import LlamaForCausalLM, PreTrainedTokenizerFast, Trainer, TrainingArguments
 from huggingface_hub import login
+import sentencepiece  
+import google.protobuf 
 
 # Authentification
 login(token="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")
@@ -17,7 +19,7 @@ context = f"Voici les données des ventes de jeux vidéo :\n{data_text}"
 # Charger le modèle et le tokenizer
 model_name = "meta-llama/Meta-Llama-3-8B"
 model = LlamaForCausalLM.from_pretrained(model_name)
-tokenizer = LlamaTokenizer.from_pretrained(model_name)
+tokenizer = PreTrainedTokenizerFast.from_pretrained(model_name) 
 
 # Préparer les données pour l'entraînement
 train_data = [{"input_ids": tokenizer.encode(context, return_tensors="pt"), "labels": tokenizer.encode(context, return_tensors="pt")}]
@@ -25,7 +27,7 @@ train_data = [{"input_ids": tokenizer.encode(context, return_tensors="pt"), "lab
 # Définir les arguments d'entraînement
 training_args = TrainingArguments(
     output_dir='./results',
-    num_train_epochs=3,
+    num_train_epochs=4,
     per_device_train_batch_size=4,
     save_steps=10_000,
     save_total_limit=2,
