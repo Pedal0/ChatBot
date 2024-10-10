@@ -39,7 +39,7 @@ if torch.cuda.is_available():
     model.to('cuda')
 
 # Créer un dataset compatible avec `Trainer`
-train_data = Dataset.from_dict({"input_ids": [input_ids], "labels": [labels]})
+train_data = Dataset.from_dict({"input_ids": input_ids.unsqueeze(0), "labels": labels.unsqueeze(0)})
 
 # Définir les arguments d'entraînement
 training_args = TrainingArguments(
