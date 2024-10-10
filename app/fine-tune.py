@@ -28,7 +28,7 @@ tokenizer = PreTrainedTokenizerFast.from_pretrained(model_name)
 model.gradient_checkpointing_enable()
 
 # Préparer les données d’entraînement
-max_length = 131072
+max_length = 512
 input_ids = tokenizer.encode(context, return_tensors="pt").squeeze()[:max_length]
 labels = input_ids.clone()
 
@@ -44,8 +44,9 @@ train_data = Dataset.from_dict({"input_ids": input_ids.unsqueeze(0), "labels": l
 # Définir les arguments d'entraînement
 training_args = TrainingArguments(
     output_dir='./results',
-    num_train_epochs=4,
+    num_train_epochs=1,
     per_device_train_batch_size=1,
+    gradient_accumulation_steps=8,  # Accumulate gradients over 8 steps
     save_steps=10_000,
     save_total_limit=2,
 )
