@@ -1,7 +1,8 @@
 import pandas as pd
 from transformers import LlamaForCausalLM, PreTrainedTokenizerFast, Trainer, TrainingArguments
 from huggingface_hub import login
-from datasets import Dataset  
+from datasets import Dataset
+import torch
 
 # Authentification
 login(token="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")
@@ -17,6 +18,9 @@ context = f"Voici les données des ventes de jeux vidéo :\n{data_text}"
 model_name = "meta-llama/Meta-Llama-3-8B"
 model = LlamaForCausalLM.from_pretrained(model_name)
 tokenizer = PreTrainedTokenizerFast.from_pretrained(model_name)
+
+# Activer le gradient checkpointing
+model.gradient_checkpointing_enable()
 
 # Préparer les données d’entraînement
 input_ids = tokenizer.encode(context, return_tensors="pt").squeeze()
@@ -40,6 +44,10 @@ trainer = Trainer(
     args=training_args,
     train_dataset=train_data,
 )
+
+# Transférer le modèle sur le GPU si disponible
+if torch.cuda.is_available():
+    model.to('cuda')
 
 # Entraîner le modèle
 trainer.train()
