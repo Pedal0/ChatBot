@@ -1,2 +1,10 @@
 app-venv
 new-venv
+fine-tuned-llama3-1B
+results-1B
+app/fine_tuned_llama3-1B/generation_config.json
+app/fine_tuned_llama3-1B/config.json
+app/fine_tuned_llama3-1B/model.safetensors
+app/fine_tuned_llama3-1B/special_tokens_map.json
+app/fine_tuned_llama3-1B/tokenizer_config.json
+app/fine_tuned_llama3-1B/tokenizer.json
